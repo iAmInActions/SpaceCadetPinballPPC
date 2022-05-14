@@ -20,7 +20,8 @@ void TEdgeSegment::port_draw()
 TEdgeSegment* TEdgeSegment::install_wall(float* floatArr, TCollisionComponent* collComp, char* activeFlagPtr,
                                          unsigned int collisionGroup, float offset, size_t wallValue)
 {
-	vector_type center{}, start{}, end{}, prevCenter{}, vec1{}, vec2{}, dstVec{};
+	vector2 center{}, start{}, end{}, prevCenter{};
+	vector3 vec1{}, vec2{}, dstVec{};
 	TEdgeSegment* edge = nullptr;
 
 	wall_type wallType = static_cast<wall_type>(static_cast<int>(floor(*floatArr) - 1.0f));
@@ -49,7 +50,7 @@ TEdgeSegment* TEdgeSegment::install_wall(float* floatArr, TCollisionComponent* c
 			start.Y = floatArr[2];
 			end.X = floatArr[3];
 			end.Y = floatArr[4];
-			auto line = new TLine(collComp, activeFlagPtr, collisionGroup, &start, &end);
+			auto line = new TLine(collComp, activeFlagPtr, collisionGroup, start, end);
 			edge = line;
 
 			if (line)
@@ -92,7 +93,7 @@ TEdgeSegment* TEdgeSegment::install_wall(float* floatArr, TCollisionComponent* c
 					vec1.Y = center.Y - prevCenter.Y;
 					vec2.X = centerX2 - centerX1;
 					vec2.Y = centerY2 - center.Y;
-					maths::cross(&vec1, &vec2, &dstVec);
+					maths::cross(vec1, vec2, dstVec);
 					if ((dstVec.Z > 0.0f && offset > 0.0f) ||
 						(dstVec.Z < 0.0f && offset < 0.0f))
 					{
@@ -112,7 +113,7 @@ TEdgeSegment* TEdgeSegment::install_wall(float* floatArr, TCollisionComponent* c
 				start.Y = floatArrPtr[1];
 				end.X = floatArrPtr[2];
 				end.Y = floatArrPtr[3];
-				auto line = new TLine(collComp, activeFlagPtr, collisionGroup, &start, &end);
+				auto line = new TLine(collComp, activeFlagPtr, collisionGroup, start, end);
 				edge = line;
 
 				if (line)

@@ -36,7 +36,7 @@ TKickout::TKickout(TPinballTable* table, int groupIndex, bool someFlag): TCollis
 	if (Circle.RadiusSq == 0.0f)
 		Circle.RadiusSq = 0.001f;
 	auto tCircle = new TCircle(this, &ActiveFlag, visual.CollisionGroup,
-	                           reinterpret_cast<vector_type*>(visual.FloatArr), Circle.RadiusSq);
+	                           reinterpret_cast<vector3*>(visual.FloatArr), Circle.RadiusSq);
 	if (tCircle)
 	{
 		tCircle->place_in_grid();
@@ -54,7 +54,6 @@ TKickout::TKickout(TPinballTable* table, int groupIndex, bool someFlag): TCollis
 	circle.RadiusSq = Circle.RadiusSq;
 	circle.Center.X = Circle.Center.X;
 	circle.Center.Y = Circle.Center.Y;
-	circle.Center.Z = Circle.Center.Z;
 	Field.Flag2Ptr = &ActiveFlag;
 	Field.CollisionComp = this;
 	Field.Mask = visual.CollisionGroup;
@@ -105,7 +104,7 @@ int TKickout::get_scoring(int index)
 	return index < 5 ? Scores[index] : 0;
 }
 
-void TKickout::Collision(TBall* ball, vector_type* nextPosition, vector_type* direction, float coef, TEdgeSegment* edge)
+void TKickout::Collision(TBall* ball, vector2* nextPosition, vector2* direction, float coef, TEdgeSegment* edge)
 {
 	if (!KickFlag1)
 	{
@@ -129,9 +128,9 @@ void TKickout::Collision(TBall* ball, vector_type* nextPosition, vector_type* di
 	}
 }
 
-int TKickout::FieldEffect(TBall* ball, vector_type* dstVec)
+int TKickout::FieldEffect(TBall* ball, vector2* dstVec)
 {
-	vector_type direction{};
+	vector2 direction{};
 
 	if (KickFlag1)
 		return 0;
@@ -139,7 +138,7 @@ int TKickout::FieldEffect(TBall* ball, vector_type* dstVec)
 	direction.Y = Circle.Center.Y - ball->Position.Y;
 	if (direction.Y * direction.Y + direction.X * direction.X > Circle.RadiusSq)
 		return 0;
-	maths::normalize_2d(&direction);
+	maths::normalize_2d(direction);
 	dstVec->X = direction.X * FieldMult - ball->Acceleration.X * ball->Speed;
 	dstVec->Y = direction.Y * FieldMult - ball->Acceleration.Y * ball->Speed;
 	return 1;

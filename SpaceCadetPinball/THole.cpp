@@ -31,7 +31,7 @@ THole::THole(TPinballTable* table, int groupIndex) : TCollisionComponent(table, 
 		Circle.RadiusSq = 0.001f;
 
 	auto tCircle = new TCircle(this, &ActiveFlag, visual.CollisionGroup,
-	                           reinterpret_cast<vector_type*>(visual.FloatArr),
+	                           reinterpret_cast<vector3*>(visual.FloatArr),
 	                           Circle.RadiusSq);
 	if (tCircle)
 	{
@@ -50,7 +50,6 @@ THole::THole(TPinballTable* table, int groupIndex) : TCollisionComponent(table, 
 	circle.RadiusSq = Circle.RadiusSq;
 	circle.Center.X = Circle.Center.X;
 	circle.Center.Y = Circle.Center.Y;
-	circle.Center.Z = Circle.Center.Z;
 
 	Field.Flag2Ptr = &ActiveFlag;
 	Field.CollisionComp = this;
@@ -70,7 +69,7 @@ int THole::Message(int code, float value)
 	return 0;
 }
 
-void THole::Collision(TBall* ball, vector_type* nextPosition, vector_type* direction, float coef, TEdgeSegment* edge)
+void THole::Collision(TBall* ball, vector2* nextPosition, vector2* direction, float coef, TEdgeSegment* edge)
 {
 	if (!BallCapturedFlag)
 	{
@@ -94,10 +93,10 @@ void THole::Collision(TBall* ball, vector_type* nextPosition, vector_type* direc
 	}
 }
 
-int THole::FieldEffect(TBall* ball, vector_type* vecDst)
+int THole::FieldEffect(TBall* ball, vector2* vecDst)
 {
 	int result;
-	vector_type direction{};
+	vector2 direction{};
 
 	if (BallCapturedFlag)
 	{
@@ -128,7 +127,7 @@ int THole::FieldEffect(TBall* ball, vector_type* vecDst)
 		direction.Y = Circle.Center.Y - ball->Position.Y;
 		if (direction.X * direction.X + direction.Y * direction.Y <= Circle.RadiusSq)
 		{
-			maths::normalize_2d(&direction);
+			maths::normalize_2d(direction);
 			vecDst->X = direction.X * GravityPull - ball->Acceleration.X * ball->Speed;
 			vecDst->Y = direction.Y * GravityPull - ball->Acceleration.Y * ball->Speed;
 			result = 1;

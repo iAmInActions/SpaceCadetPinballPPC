@@ -64,7 +64,7 @@ void nudge::nudge_up()
 
 void nudge::_nudge(float xDiff, float yDiff)
 {
-	vector_type accelMod;
+	vector2 accelMod;
 	float invAccelX, invAccelY;
 
 	accelMod.X = xDiff * 0.5f;
@@ -75,8 +75,8 @@ void nudge::_nudge(float xDiff, float yDiff)
 		{
 			ball->Acceleration.X = ball->Acceleration.X * ball->Speed;
 			ball->Acceleration.Y = ball->Acceleration.Y * ball->Speed;
-			maths::vector_add(&ball->Acceleration, &accelMod);
-			ball->Speed = maths::normalize_2d(&ball->Acceleration);
+			maths::vector_add(ball->Acceleration, accelMod);
+			ball->Speed = maths::normalize_2d(ball->Acceleration);
 			if (ball->Acceleration.X == 0.0f)
 				invAccelX = 1000000000.0;
 			else
