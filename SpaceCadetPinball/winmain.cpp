@@ -54,7 +54,7 @@ int winmain::WinMain(LPCSTR lpCmdLine)
 	SDL_SetMainReady();
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO |
 		SDL_INIT_EVENTS
-		#if SDL_VERSION_ATLEAST(2,0,4)
+		#if 0//SDL_VERSION_ATLEAST(2,0,4)
 		| SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER
 		#endif
 		) < 0)
@@ -622,12 +622,6 @@ void winmain::RenderUi()
 		RenderFrameTimeDialog();
 }
 
-static SDL_GameController* SDL_GameControllerFromInstanceID_dummy(SDL_JoystickID joyid){
-
-	return NULL;
-
-}
-
 int winmain::event_handler(const SDL_Event* event)
 {
 	ImGui_ImplSDL2_ProcessEvent(event);
@@ -826,13 +820,14 @@ int winmain::event_handler(const SDL_Event* event)
 		default: ;
 		}
 		break;
-		/*
+		
 	case SDL_JOYDEVICEADDED:
 		if (SDL_IsGameController(event->jdevice.which))
 		{
 			SDL_GameControllerOpen(event->jdevice.which);
 		}
 		break;
+		/*
 	case SDL_JOYDEVICEREMOVED:
 		{
 			SDL_GameController* controller = SDL_GameControllerFromInstanceID(event->jdevice.which);
@@ -841,7 +836,7 @@ int winmain::event_handler(const SDL_Event* event)
 				SDL_GameControllerClose(controller);
 			}
 		}
-		break;
+		break;*/
 	case SDL_CONTROLLERBUTTONDOWN:
 		pb::InputDown({InputTypes::GameController, event->cbutton.button});
 		switch (event->cbutton.button)
@@ -861,7 +856,7 @@ int winmain::event_handler(const SDL_Event* event)
 		break;
 	case SDL_CONTROLLERBUTTONUP:
 		pb::InputUp({InputTypes::GameController, event->cbutton.button});
-		break;*/
+		break;
 	default: ;
 	}
 
