@@ -53,7 +53,11 @@ int winmain::WinMain(LPCSTR lpCmdLine)
 	// SDL init
 	SDL_SetMainReady();
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO |
-		SDL_INIT_EVENTS | SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) < 0)
+		SDL_INIT_EVENTS
+		#if SDL_VERSION_ATLEAST(2,0,4)
+		| SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER
+		#endif
+		) < 0)
 	{
 		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Could not initialize SDL2", SDL_GetError(), nullptr);
 		return 1;
@@ -618,6 +622,12 @@ void winmain::RenderUi()
 		RenderFrameTimeDialog();
 }
 
+static SDL_GameController* SDL_GameControllerFromInstanceID_dummy(SDL_JoystickID joyid){
+
+	return NULL;
+
+}
+
 int winmain::event_handler(const SDL_Event* event)
 {
 	ImGui_ImplSDL2_ProcessEvent(event);
@@ -790,7 +800,7 @@ int winmain::event_handler(const SDL_Event* event)
 		switch (event->window.event)
 		{
 		case SDL_WINDOWEVENT_FOCUS_GAINED:
-		case SDL_WINDOWEVENT_TAKE_FOCUS:
+		//case SDL_WINDOWEVENT_TAKE_FOCUS:
 		case SDL_WINDOWEVENT_SHOWN:
 			activated = true;
 			Sound::Activate();
@@ -816,6 +826,7 @@ int winmain::event_handler(const SDL_Event* event)
 		default: ;
 		}
 		break;
+		/*
 	case SDL_JOYDEVICEADDED:
 		if (SDL_IsGameController(event->jdevice.which))
 		{
@@ -850,7 +861,7 @@ int winmain::event_handler(const SDL_Event* event)
 		break;
 	case SDL_CONTROLLERBUTTONUP:
 		pb::InputUp({InputTypes::GameController, event->cbutton.button});
-		break;
+		break;*/
 	default: ;
 	}
 

@@ -337,6 +337,7 @@ static void ImGui_ImplSDL2_UpdateMousePosAndButtons()
 
     // Set Dear ImGui mouse position from OS position + get buttons. (this is the common behavior)
     if (bd->MouseCanUseGlobalState)
+    #if SDL_HAS_CAPTURE_AND_GLOBAL_MOUSE
     {
         // Single-viewport mode: mouse position in client window coordinates (io.MousePos is (0,0) when the mouse is on the upper-left corner of the app window)
         // Unlike local position obtained earlier this will be valid when straying out of bounds.
@@ -347,6 +348,7 @@ static void ImGui_ImplSDL2_UpdateMousePosAndButtons()
         io.MousePos = ImVec2((float)(mouse_x_global - window_x), (float)(mouse_y_global - window_y));
     }
     else
+    #endif
     {
         io.MousePos = ImVec2((float)mouse_x_local, (float)mouse_y_local);
     }

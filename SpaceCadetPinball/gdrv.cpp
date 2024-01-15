@@ -111,6 +111,13 @@ void gdrv_bitmap8::ScaleIndexed(float scaleX, float scaleY)
 	BmpBufPtr1 = new ColorRgba[Stride * Height];
 }
 
+//FOR SDL 2.0.3
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    #define __SDL_PIXELFORMAT_BGRA32 SDL_PIXELFORMAT_BGRA8888
+#else
+    #define __SDL_PIXELFORMAT_BGRA32 SDL_PIXELFORMAT_ARGB8888
+#endif
+
 void gdrv_bitmap8::CreateTexture(const char* scaleHint, int access)
 {
 	if (Texture != nullptr)
@@ -122,7 +129,7 @@ void gdrv_bitmap8::CreateTexture(const char* scaleHint, int access)
 	Texture = SDL_CreateTexture
 	(
 		winmain::Renderer,
-		SDL_PIXELFORMAT_BGRA32,
+		__SDL_PIXELFORMAT_BGRA32,
 		access,
 		Width, Height
 	);

@@ -202,9 +202,16 @@ namespace
 			SDL_RenderDrawPoint(Renderer, x, y);
 		}
 
+		//FOR SDL 2.0.3
+		#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    		#define __SDL_PIXELFORMAT_RGBA32 SDL_PIXELFORMAT_RGBA8888
+		#else
+    		#define __SDL_PIXELFORMAT_RGBA32 SDL_PIXELFORMAT_ABGR8888
+		#endif
+
 		SDL_Texture* MakeTexture(int width, int height)
 		{
-			SDL_Texture* texture = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, width, height);
+			SDL_Texture* texture = SDL_CreateTexture(Renderer, __SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, width, height);
 			SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 			return texture;
 		}
@@ -595,7 +602,7 @@ namespace ImGuiSDL
 		Uint8 initialR, initialG, initialB, initialA;
 		SDL_GetRenderDrawColor(CurrentDevice->Renderer, &initialR, &initialG, &initialB, &initialA);
 
-		SDL_bool initialClipEnabled = SDL_RenderIsClipEnabled(CurrentDevice->Renderer);
+		SDL_bool initialClipEnabled = SDL_FALSE;//CurrentDevice->Renderer->clipping_enabled;
 		SDL_Rect initialClipRect;
 		SDL_RenderGetClipRect(CurrentDevice->Renderer, &initialClipRect);
 
