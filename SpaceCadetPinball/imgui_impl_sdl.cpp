@@ -62,11 +62,11 @@
 #include <TargetConditionals.h>
 #endif
 
-#if SDL_VERSION_ATLEAST(2,0,4) && !defined(__EMSCRIPTEN__) && !defined(__ANDROID__) && !(defined(__APPLE__) && TARGET_OS_IOS)
-#define SDL_HAS_CAPTURE_AND_GLOBAL_MOUSE    1
-#else
+//#if SDL_VERSION_ATLEAST(2,0,4) && !defined(__EMSCRIPTEN__) && !defined(__ANDROID__) && !(defined(__APPLE__) && TARGET_OS_IOS)
+//#define SDL_HAS_CAPTURE_AND_GLOBAL_MOUSE    1
+//#else
 #define SDL_HAS_CAPTURE_AND_GLOBAL_MOUSE    0
-#endif
+//#endif
 #define SDL_HAS_MOUSE_FOCUS_CLICKTHROUGH    SDL_VERSION_ATLEAST(2,0,5)
 #define SDL_HAS_VULKAN                      SDL_VERSION_ATLEAST(2,0,6)
 
@@ -336,6 +336,8 @@ static void ImGui_ImplSDL2_UpdateMousePosAndButtons()
         SDL_WarpMouseInWindow(bd->Window, (int)mouse_pos_prev.x, (int)mouse_pos_prev.y);
 
     // Set Dear ImGui mouse position from OS position + get buttons. (this is the common behavior)
+    
+    #if SDL_HAS_CAPTURE_AND_GLOBAL_MOUSE
     if (bd->MouseCanUseGlobalState)
     {
         // Single-viewport mode: mouse position in client window coordinates (io.MousePos is (0,0) when the mouse is on the upper-left corner of the app window)
@@ -347,6 +349,7 @@ static void ImGui_ImplSDL2_UpdateMousePosAndButtons()
         io.MousePos = ImVec2((float)(mouse_x_global - window_x), (float)(mouse_y_global - window_y));
     }
     else
+    #endif
     {
         io.MousePos = ImVec2((float)mouse_x_local, (float)mouse_y_local);
     }
